@@ -86,7 +86,7 @@ class LegacyWidgetEditHandler extends Component {
 	}
 
 	requestWidgetUpdater( instanceChanges, callback ) {
-		const { identifier, instanceId, instance } = this.props;
+		const { identifier, instanceId, instance, isCallbackWidget } = this.props;
 		if ( ! identifier ) {
 			return;
 		}
@@ -98,6 +98,7 @@ class LegacyWidgetEditHandler extends Component {
 				instance,
 				// use negative ids to make sure the id does not exist on the database.
 				id_to_use: instanceId * -1,
+				is_callback_widget: isCallbackWidget,
 				instance_changes: instanceChanges,
 			},
 			method: 'POST',
