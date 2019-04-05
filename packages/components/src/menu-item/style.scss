@@ -1,5 +1,6 @@
 .components-menu-item__button,
 .components-menu-item__button.components-icon-button {
+	@include menu-style__neutral;
 	width: 100%;
 	padding: $grid-size ($grid-size-large - $border-width);
 	text-align: left;
@@ -9,7 +10,7 @@
 	.dashicon,
 	.components-menu-items__item-icon,
 	> span > svg {
-		margin-right: 4px;
+		margin-right: 5px;
 	}
 
 	.components-menu-items__item-icon {
@@ -18,12 +19,8 @@
 	}
 
 	&:hover:not(:disabled):not([aria-disabled="true"]) {
+		@include menu-style__hover;
 		color: $dark-gray-500;
-		// Disable hover style on mobile to prevent odd scroll behaviour.
-		// See: https://github.com/WordPress/gutenberg/pull/10333
-		@include break-medium() {
-			@include menu-style__hover;
-		}
 
 		.components-menu-item__shortcut {
 			opacity: 1;

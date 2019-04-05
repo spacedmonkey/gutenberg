@@ -1,4 +1,4 @@
-.block-editor-block-settings-menu__toggle .dashicon {
+.block-editor-block-settings-menu .components-dropdown-menu__toggle .dashicon {
 	transform: rotate(90deg);
 }
 
@@ -6,8 +6,6 @@
 	margin-right: 0;
 }
 
-		.dashicon {
-			margin-right: 5px;
-		}
-	}
+.block-editor-block-settings-menu .components-dropdown-menu__indicator {
+	display: none;
 }
