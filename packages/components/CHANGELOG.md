@@ -3,10 +3,15 @@
 ### New Features
 
 - Added a new `HorizontalRule` component.
+- Added a new `DropdownMenuSeparator` component to be used in the new `DropdownMenu` children function option.
 
 ### Bug Fixes
 
 - Fixed display of reset button when using RangeControl `allowReset` prop.
+
+### Documentation
+
+- Added missing documentation for `DropdownMenu` props `menuLabel`, `position`, `className`
 
 ## 7.3.0 (2019-04-16)
 
@@ -15,15 +20,11 @@
 - Added a new `render` property to `FormFileUpload` component. Allowing users of the component to custom the UI for their needs.
 - Added a new `BaseControl.VisualLabel` component.
 - Added a new `preview` prop to the `Placeholder` component which allows to display a preview, for example a media preview when the Placeholder is used in media editing contexts.
-- Added a new `anchorRect` prop to `Popover` which enables a developer to provide a custom `DOMRect` object at which to position the popover.
+- `DropdownMenu` now supports passing a [render prop](https://reactjs.org/docs/render-props.html#using-props-other-than-render) as children for more advanced customization.
 
 ### Bug fixes
 
 - Fix `instanceId` prop passed through to `Button` component via `MenuItems` producing React console error. Fixed by removing the unnecessary use of `withInstanceId` on the `MenuItems` component [#14599](https://github.com/WordPress/gutenberg/pull/14599)
-
-### Documentation
-
-- Added missing documentation for `DropdownMenu` props `menuLabel`, `position`, `className`
 
 ## 7.2.0 (2019-03-20)
 
