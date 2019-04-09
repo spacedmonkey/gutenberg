@@ -33,6 +33,7 @@ class LegacyWidgetEdit extends Component {
 	constructor() {
 		super( ...arguments );
 		this.state = {
+			hasEditForm: true,
 			isPreview: false,
 		};
 		this.switchToEdit = this.switchToEdit.bind( this );
@@ -47,8 +48,8 @@ class LegacyWidgetEdit extends Component {
 			hasPermissionsToManageWidgets,
 			setAttributes,
 		} = this.props;
-		const { isPreview } = this.state;
-		const { identifier, isCallbackWidget, hasEditForm } = attributes;
+		const { isPreview, hasEditForm } = this.state;
+		const { identifier, isCallbackWidget } = attributes;
 		const widgetObject = identifier && availableLegacyWidgets[ identifier ];
 		if ( ! widgetObject ) {
 			let placeholderContent;
@@ -66,7 +67,6 @@ class LegacyWidgetEdit extends Component {
 							instance: {},
 							identifier: value,
 							isCallbackWidget: availableLegacyWidgets[ value ].isCallbackWidget,
-							hasEditForm: availableLegacyWidgets[ value ].hasEditForm,
 						} ) }
 						options={ [ { value: 'none', label: 'Select widget' } ].concat(
 							map( availableLegacyWidgets, ( widget, key ) => {
@@ -142,10 +142,17 @@ class LegacyWidgetEdit extends Component {
 						instance={ attributes.instance }
 						isCallbackWidget={ isCallbackWidget }
 						onInstanceChange={
-							( newInstance ) => {
-								this.props.setAttributes( {
-									instance: newInstance,
-								} );
+							( newInstance, newHasEditForm ) => {
+								if ( newInstance ) {
+									this.props.setAttributes( {
+										instance: newInstance,
+									} );
+								}
+								if ( newHasEditForm !== this.hasEditForm ) {
+									this.setState( {
+										hasEditForm: newHasEditForm,
+									} );
+								}
 							}
 						}
 					/>
@@ -160,6 +167,9 @@ class LegacyWidgetEdit extends Component {
 		this.props.setAttributes( {
 			instance: {},
 			identifier: undefined,
+		} );
+		this.setState( {
+			hasEditForm: true,
 		} );
 	}
 

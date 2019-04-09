@@ -88,9 +88,8 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 			return false;
 		}
 		if ( $is_callback_widget ) {
-			global $wp_registered_widget_controls;
-			return isset( $wp_registered_widget_controls[ $identifier ]['callback'] ) &&
-			is_callable( $wp_registered_widget_controls[ $identifier ]['callback'] );
+			global $wp_registered_widgets;
+			return isset( $wp_registered_widgets[ $identifier ] );
 		}
 		global $wp_widget_factory;
 		return isset( $wp_widget_factory->widgets[ $identifier ] ) &&
@@ -128,11 +127,18 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 	 */
 	private function compute_new_widget_handle_callback_widgets( $identifier, $instance_changes ) {
 		global $wp_registered_widget_controls;
-		$control = $wp_registered_widget_controls[ $identifier ];
-		$_POST   = array_merge( $_POST, $instance_changes );
-		ob_start();
-		call_user_func_array( $control['callback'], $control['params'] );
-		$form = ob_get_clean();
+		$form = '';
+		if (
+			isset( $wp_registered_widget_controls[ $identifier ]['callback'] ) &&
+			is_callable( $wp_registered_widget_controls[ $identifier ]['callback'] )
+		) {
+			$control = $wp_registered_widget_controls[ $identifier ];
+			$_POST   = array_merge( $_POST, $instance_changes );
+			ob_start();
+			call_user_func_array( $control['callback'], $control['params'] );
+			$form = ob_get_clean();
+		}
+
 		return rest_ensure_response(
 			array(
 				'instance' => array(),

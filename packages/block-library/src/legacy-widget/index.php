@@ -72,9 +72,6 @@ function register_block_core_legacy_widget() {
 				'isCallbackWidget' => array(
 					'type' => 'boolean',
 				),
-				'hasEditForm'      => array(
-					'type' => 'boolean',
-				),
 			),
 			'render_callback' => 'render_block_legacy_widget',
 		)

@@ -90,9 +90,7 @@ function gutenberg_legacy_widget_settings( $settings ) {
 
 	$has_permissions_to_manage_widgets = current_user_can( 'edit_theme_options' );
 	$available_legacy_widgets          = array();
-	global $wp_widget_factory, $wp_registered_widgets, $wp_registered_widget_controls;
-	// Add widgets implemented as a class to the available_legacy_widgets widgets array.
-	// All widgets implemented as a class have an edit form.
+	global $wp_widget_factory, $wp_registered_widgets;
 	foreach ( $wp_widget_factory->widgets as $class => $widget_obj ) {
 		if ( ! in_array( $class, $core_widgets ) ) {
 			$available_legacy_widgets[ $class ] = array(
@@ -104,13 +102,10 @@ function gutenberg_legacy_widget_settings( $settings ) {
 					html_entity_decode( $widget_obj->widget_options['description'] ) :
 					null,
 				'isCallbackWidget' => false,
-				'hasEditForm'      => true,
 			);
 		}
 	}
-	// Add widgets registered using wp_register_sidebar_widget.
 	foreach ( $wp_registered_widgets as $widget_id => $widget_obj ) {
-		// Skip instances of widgets that are implemented as classes.
 		if (
 			is_array( $widget_obj['callback'] ) &&
 			isset( $widget_obj['callback'][0] ) &&
@@ -118,20 +113,10 @@ function gutenberg_legacy_widget_settings( $settings ) {
 		) {
 			continue;
 		}
-		// By default widgets registered with wp_register_sidebar_widget don't have an edit form, but a form may be added.
-		$has_edit_form = false;
-		// Checks if an edit form was added.
-		if (
-			isset( $wp_registered_widget_controls[ $widget_id ]['callback'] ) &&
-			is_callable( $wp_registered_widget_controls[ $widget_id ]['callback'] )
-		) {
-			$has_edit_form = true;
-		}
 		$available_legacy_widgets[ $widget_id ] = array(
 			'name'             => html_entity_decode( $widget_obj['name'] ),
 			'description'      => html_entity_decode( wp_widget_description( $widget_id ) ),
 			'isCallbackWidget' => true,
-			'hasEditForm'      => $has_edit_form,
 		);
 	}
 
