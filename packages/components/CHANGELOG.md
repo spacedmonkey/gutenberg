@@ -9,9 +9,13 @@
 
 - Fixed display of reset button when using RangeControl `allowReset` prop.
 
+### Internal
+
+- `MenuGroup` no longer uses `NavigableMenu` internally. It needs to be explicitly wrapped with `NavigableMenu` to bring back the same behavior.
+
 ### Documentation
 
-- Added missing documentation for `DropdownMenu` props `menuLabel`, `position`, `className`
+- Added missing documentation for `DropdownMenu` props `menuLabel`, `position`, `className`.
 
 ## 7.3.0 (2019-04-16)
 
