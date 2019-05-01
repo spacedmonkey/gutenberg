@@ -37,9 +37,15 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 				'/' . $this->rest_base . '/(?P<identifier>[\w-_]+)/',
 				array(
 					'args' => array(
-						'identifier' => array(
+						'identifier'         => array(
 							'description' => __( 'Class name of the widget.', 'gutenberg' ),
 							'type'        => 'string',
+							'required'    => true,
+						),
+						'is_callback_widget' => array(
+							'description' => __( 'Flag indicating if the widget is registered using register_sidebar_widget or is a subclass of WP_Widget.', 'gutenberg' ),
+							'type'        => 'boolean',
+							'default'     => false,
 						),
 					),
 					array(
@@ -81,12 +87,9 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 	 * @param string  $identifier         Widget id for callback widgets or widget class name for class widgets.
 	 * @param boolean $is_callback_widget If true the widget is a back widget if false the widget is a class widget.
 	 *
-	 * @return boolean True if widget being referenced exists and false otherwise.
+	 * @return boolean True if the widget being referenced exists and false otherwise.
 	 */
 	private function is_valid_widget( $identifier, $is_callback_widget ) {
-		if ( null === $identifier ) {
-			return false;
-		}
 		if ( $is_callback_widget ) {
 			global $wp_registered_widgets;
 			return isset( $wp_registered_widgets[ $identifier ] );
@@ -99,12 +102,12 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 	/**
 	 * Computes an array with instance changes cleaned of widget specific prefixes and sufixes.
 	 *
-	 * @since 5.2.0
+	 * @since 5.7.0
 	 * @param string $id_base          Widget ID Base.
 	 * @param string $id               Widget instance identifier.
 	 * @param array  $instance_changes Array with the form values being being changed.
 	 *
-	 * @return array An array based on $instance_changes but whose keys have the widget specific sufixes and prefixes removed.
+	 * @return array An array based on $instance_changes whose keys have the widget specific sufixes and prefixes removed.
 	 */
 	private function parse_instance_changes( $id_base, $id, $instance_changes ) {
 		$instance_changes_parsed = array();
@@ -119,7 +122,7 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 	/**
 	 * Returns the bew callback widget form.
 	 *
-	 * @since 5.2.0
+	 * @since 5.7.0
 	 * @param string $identifier       Widget id for callback widgets or widget class name for class widgets.
 	 * @param array  $instance_changes Array with the form values being being changed.
 	 *
@@ -152,7 +155,7 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 	/**
 	 * Returns the new class widget instance and the form that represents it.
 	 *
-	 * @since 5.2.0
+	 * @since 5.7.0
 	 * @access public
 	 *
 	 * @param string $identifier       Widget id for callback widgets or widget class name for class widgets.
@@ -240,7 +243,7 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 	/**
 	 * Returns the new widget instance and the form that represents it.
 	 *
-	 * @since 5.2.0
+	 * @since 5.7.0
 	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -249,9 +252,6 @@ class WP_REST_Widget_Updater_Controller extends WP_REST_Controller {
 	public function compute_new_widget( $request ) {
 		$identifier         = $request->get_param( 'identifier' );
 		$is_callback_widget = $request->get_param( 'is_callback_widget' );
-		if ( null === $is_callback_widget ) {
-			$is_callback_widget = false;
-		}
 
 		if ( ! $this->is_valid_widget( $identifier, $is_callback_widget ) ) {
 			return new WP_Error(
