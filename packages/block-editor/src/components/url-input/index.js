@@ -224,9 +224,21 @@ class URLInput extends Component {
 	}
 
 	render() {
-		const { value = '', autoFocus = true, instanceId, className } = this.props;
+		const {
+			autoFocus = true,
+			className,
+			instanceId,
+			value = '',
+			emptySuggestions,
+		} = this.props;
 		const { showSuggestions, suggestions, selectedSuggestion, loading } = this.state;
 		/* eslint-disable jsx-a11y/no-autofocus */
+		let suggestionsToShow;
+		if ( ! value && emptySuggestions ) {
+			suggestionsToShow = emptySuggestions;
+		} else if ( showSuggestions && !! suggestions.length ) {
+			suggestionsToShow = suggestions;
+		}
 		return (
 			<div className={ classnames( 'editor-url-input block-editor-url-input', className ) }>
 				<input
@@ -249,7 +261,7 @@ class URLInput extends Component {
 
 				{ ( loading ) && <Spinner /> }
 
-				{ showSuggestions && !! suggestions.length &&
+				{ suggestionsToShow &&
 					<Popover position="bottom" noArrow focusOnMount={ false }>
 						<div
 							className="editor-url-input__suggestions block-editor-url-input__suggestions"
@@ -257,7 +269,7 @@ class URLInput extends Component {
 							ref={ this.autocompleteRef }
 							role="listbox"
 						>
-							{ suggestions.map( ( suggestion, index ) => (
+							{ suggestionsToShow.map( ( suggestion, index ) => (
 								<button
 									key={ suggestion.id }
 									role="option"

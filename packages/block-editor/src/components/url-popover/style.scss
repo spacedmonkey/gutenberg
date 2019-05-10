@@ -50,10 +50,31 @@
 }
 
 .block-editor-url-popover__settings {
+	display: block;
 	padding: $panel-padding;
 	border-top: $border-width solid $light-gray-500;
 
 	.components-base-control:last-child .components-base-control__field {
 		margin-bottom: 0;
+	}
+}
+
+.block-editor-url-popover__link-editor,
+.block-editor-url-popover__link-viewer {
+	display: flex;
+}
+
+.block-editor-url-popover__link-viewer-url {
+	margin: $grid-size - $border-width;
+	flex-grow: 1;
+	flex-shrink: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 150px;
+	max-width: 500px;
+
+	&.has-invalid-link {
+		color: $alert-red;
 	}
 }
