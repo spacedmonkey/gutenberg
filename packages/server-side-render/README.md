@@ -43,7 +43,7 @@ E.g: `{ post_id: 12 }`.
 Render core/archives preview.
 
 ```jsx
-import { ServerSideRender } from '@wordpress/components';
+import { ServerSideRender } from '@wordpress/server-side-render';
 
 const MyServerSideRender = () => (
 	<ServerSideRender
