@@ -181,3 +181,59 @@ function gutenberg_create_wp_area_post_type() {
 	);
 }
 add_action( 'init', 'gutenberg_create_wp_area_post_type' );
+
+/**
+ * Outputs a block widget on the website frontend.
+ *
+ * @param array $options   Widget options.
+ * @param array $arguments Arguments array.
+ */
+function gutenberg_output_block_widget( $options, $arguments ) {
+	echo $options['before_widget'];
+	$wp_area_id = $arguments['wp_area_id'];
+	$post = get_post( $wp_area_id );
+	if ( $post ) {
+		echo apply_filters( 'the_content', $post->post_content );
+	}
+	echo $options['after_widget'];
+}
+
+/**
+ * Filters the $sidebars_widgets to exchange wp_area post id with a widget that renders that block area.
+ *
+ * @param array $sidebars_widgets An associative array of sidebars and their widgets.
+ * @return array Filtered associative array of sidebars and their widgets.
+ */
+function gutenberg_swap_out_sidebars_blocks_for_block_widgets( $sidebars_widgets ) {
+	global $wp_registered_widgets;
+	foreach ( $sidebars_widgets as $sidebar_id => $item ) {
+		if ( ! is_numeric( $item ) ) {
+			continue;
+		}
+		$widget_id = 'block-area-' . $item;
+		$sidebars_widgets[ $sidebar_id ] = array(
+			$widget_id,
+		);
+		if ( isset( $wp_registered_widgets[ $widget_id ] ) ) {
+			continue;
+		}
+		wp_register_sidebar_widget(
+			$widget_id,
+			sprintf( __( 'Block Area: %s', 'gutenberg' ), $item ),
+			'gutenberg_output_block_widget',
+			array(
+				'classname'   => 'widget-area',
+				'description' => sprintf(
+					/* translators: %s: Name of the block */
+					__( 'Displays widget area', 'gutenberg' ),
+					$item
+				),
+			),
+			array(
+				'wp_area_id' => $item,
+			)
+		);
+	}
+	return $sidebars_widgets;
+}
+add_filter( 'sidebars_widgets', 'gutenberg_swap_out_sidebars_blocks_for_block_widgets' );
